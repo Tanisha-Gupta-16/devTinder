@@ -4,14 +4,15 @@ const { User } = require("../models/user.js");
 const authUser = async (req, res, next) => {
   try {
     const cookies = req.cookies;
+
     const { token } = cookies;
+
     if (!token) {
-      throw new Error("Invalid token");
+      return res.status(401).json({ message: "Please Login!!" });
     }
     const decodedObj = await jwt.verify(token, "dev@Tinder");
 
     const { _id } = decodedObj;
-
     const user = await User.findById(_id);
     if (!user) {
       throw new Error("Please signup first");

@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 profileRouter.get("/profile", authUser, async (req, res) => {
   try {
     const user = req.user;
-    res.send(user);
+    res.json({ data: user });
   } catch (err) {
     res.status(400).send("Error: " + err.message);
   }
@@ -25,9 +25,9 @@ profileRouter.patch("/profile/edit", authUser, async (req, res) => {
       (key) => (loggedInUser[key] = updateData[key]),
     );
     await loggedInUser.save();
-    res.send(`${loggedInUser.firstName}: Profile Updated Successfully`);
+    res.json({ data: loggedInUser, message: "Profile Updated Successfully" });
   } catch (err) {
-    res.status(400).send("Error: " + err.message);
+    res.status(400).json({ message: "Error: " + err.message });
   }
 });
 
