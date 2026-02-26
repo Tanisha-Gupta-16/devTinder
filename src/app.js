@@ -8,6 +8,9 @@ const { profileRouter } = require("./router/profile.js");
 const { userRouter } = require("./router/user.js");
 const { requestRouter } = require("./router/requests.js");
 const { paymentRouter } = require("./router/payment.js");
+const { chatRouter } = require("./router/chat.js");
+const http = require("http");
+const { initialiseSocket } = require("./utils/socket.js");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,11 +26,15 @@ app.use("/", profileRouter);
 app.use("/", userRouter);
 app.use("/", requestRouter);
 app.use("/", paymentRouter);
+app.use("/", chatRouter);
+
+const server = http.createServer(app);
+initialiseSocket(server);
 
 connectionDB()
   .then(() => {
     console.log("Connected to DB successfully");
-    app.listen(3000, () => {
+    server.listen(3000, () => {
       console.log("Server is listening on port 3000");
     });
   })
