@@ -3,6 +3,7 @@ const { connectionDB } = require("./config/database.js");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
+require("dotenv").config();
 const { authRouter } = require("./router/auth.js");
 const { profileRouter } = require("./router/profile.js");
 const { userRouter } = require("./router/user.js");
@@ -34,8 +35,8 @@ initialiseSocket(server);
 connectionDB()
   .then(() => {
     console.log("Connected to DB successfully");
-    server.listen(3000, () => {
-      console.log("Server is listening on port 3000");
+    server.listen(process.env.PORT, () => {
+      console.log("Server is listening on port " + process.env.PORT);
     });
   })
   .catch((err) => {
