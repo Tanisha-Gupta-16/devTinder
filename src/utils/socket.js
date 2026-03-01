@@ -1,6 +1,7 @@
 const socket = require("socket.io");
 const crypto = require("crypto");
 const { Chat } = require("../models/chat.js");
+const { ConnectionRequest } = require("../models/connectionRequest.js");
 
 const getSecretRoomId = (userId, targetUserId) => {
   return crypto
@@ -17,9 +18,22 @@ const initialiseSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    socket.on("joinChat", ({ userId, targetUserId }) => {
-      const roomId = getSecretRoomId(userId, targetUserId);
-      socket.join(roomId);
+    socket.on("joinChat", async ({ userId, targetUserId }) => {
+      let connection = await ConnectionRequest.findOne({
+        $or: [
+          { fromUserId: userId, toUserId: targetUserId },
+          { toUserId: userId, fromUserId: targetUserId },
+        ],
+        status: "accepted",
+      });
+      if (connection) {
+        const roomId = getSecretRoomId(userId, targetUserId);
+        socket.join(roomId);
+      } else {
+        socket.emit("joinError", {
+          message: "You are not connected with this user",
+        });
+      }
     });
     socket.on(
       "sendMessage",
@@ -44,7 +58,7 @@ const initialiseSocket = (server) => {
           console.log(err.message);
         }
 
-        io.to(roomId).emit("messageRecieved", { firstName, text });
+        io.to(roomId).emit("messageRecieved", { firstName, text, userId });
       },
     );
     socket.on("disconnect", () => {});
