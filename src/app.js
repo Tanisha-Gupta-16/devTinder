@@ -12,12 +12,14 @@ const { paymentRouter } = require("./router/payment.js");
 const { chatRouter } = require("./router/chat.js");
 const http = require("http");
 const { initialiseSocket } = require("./utils/socket.js");
-
+const isProduction = process.env.NODE_ENV === "production";
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: isProduction
+      ? "http://dev-tinder-9ijuyqcpc-tanisha-gupta-16s-projects.vercel.app"
+      : "http://localhost:5173",
     credentials: true,
   }),
 );
