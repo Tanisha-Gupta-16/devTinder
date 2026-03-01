@@ -18,7 +18,7 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: isProduction
-      ? "http://dev-tinder-9ijuyqcpc-tanisha-gupta-16s-projects.vercel.app"
+      ? "https://dev-tinder-web-gold.vercel.app"
       : "http://localhost:5173",
     credentials: true,
   }),

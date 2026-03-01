@@ -15,7 +15,7 @@ const initialiseSocket = (server) => {
     cors: {
       origin: [
         "http://localhost:5173",
-        "http://dev-tinder-9ijuyqcpc-tanisha-gupta-16s-projects.vercel.app",
+        "https://dev-tinder-web-gold.vercel.app",
       ],
     },
   });
